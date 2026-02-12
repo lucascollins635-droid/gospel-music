@@ -1,14 +1,35 @@
-const audio = new Audio("assets/audio.mp3");
+let songs = [
+  "song1.mp3",
+  "song2.mp3",
+  "song3.mp3",
+  "song4.mp3"
+];
+
+let currentSong = 0;
+let audio = new Audio();
+let startTime;
+let mixDuration = 60 * 60 * 1000; // 1 hour in milliseconds
 
 function playMusic() {
-    audio.play();
+  startTime = Date.now();
+  currentSong = 0;
+  playNext();
 }
 
-function pauseMusic() {
-    audio.pause();
-}
+function playNext() {
+  if (Date.now() - startTime >= mixDuration) {
+    alert("1 Hour Worship Mix Finished 🙏");
+    return;
+  }
 
-function stopMusic() {
-    audio.pause();
-    audio.currentTime = 0;
+  audio.src = songs[currentSong];
+  audio.play();
+
+  audio.onended = function () {
+    currentSong++;
+    if (currentSong >= songs.length) {
+      currentSong = 0; // loop songs again
+    }
+    playNext();
+  };
 }
