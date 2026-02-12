@@ -1,34 +1,40 @@
+let songs = [
+    "assets/song1.mp3",
+    "assets/song2.mp3",
+    "assets/song3.mp3",
+    "assets/song4.mp3"
+];
+
+let currentSong = 0;
+let audio = new Audio();
+audio.volume = 0;
+
 function startMusic() {
+    playSong(currentSong);
+}
 
-  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+function playSong(index) {
+    audio.src = songs[index];
+    audio.play();
 
-  const totalDuration = 20 * 60; // 20 minutes in seconds
-  const now = audioContext.currentTime;
+    fadeIn();
 
-  function playChord(time) {
-    const notes = [261.63, 329.63, 392.00]; // C major chord
+    audio.onended = function() {
+        currentSong++;
+        if (currentSong < songs.length) {
+            playSong(currentSong);
+        } else {
+            alert("Worship session finished 🙏🔥");
+        }
+    };
+}
 
-    notes.forEach(freq => {
-      const osc = audioContext.createOscillator();
-      const gain = audioContext.createGain();
-
-      osc.type = "sine";
-      osc.frequency.value = freq;
-
-      osc.connect(gain);
-      gain.connect(audioContext.destination);
-
-      gain.gain.setValueAtTime(0.2, time);
-      gain.gain.exponentialRampToValueAtTime(0.001, time + 3);
-
-      osc.start(time);
-      osc.stop(time + 3);
-    });
-  }
-
-  for (let i = 0; i < totalDuration; i += 4) {
-    playChord(now + i);
-  }
-
-  alert("Your 20 minute gospel worship is playing 🎶");
+function fadeIn() {
+    let fade = setInterval(() => {
+        if (audio.volume < 1) {
+            audio.volume += 0.05;
+        } else {
+            clearInterval(fade);
+        }
+    }, 200);
 }
