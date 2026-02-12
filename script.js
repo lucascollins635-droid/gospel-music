@@ -8,7 +8,7 @@ let songs = [
 let currentSong = 0;
 let audio = new Audio();
 let startTime;
-let mixDuration = 60 * 60 * 1000; // 1 hour in milliseconds
+let mixDuration = 60 * 60 * 1000; // 1 hour
 
 function playMusic() {
   startTime = Date.now();
@@ -17,8 +17,11 @@ function playMusic() {
 }
 
 function playNext() {
+
+  // If 1 hour reached, stop everything
   if (Date.now() - startTime >= mixDuration) {
-    alert("1 Hour Worship Mix Finished 🙏");
+    audio.pause();
+    alert("🔥 1 Hour Worship Mix Completed!");
     return;
   }
 
@@ -27,9 +30,12 @@ function playNext() {
 
   audio.onended = function () {
     currentSong++;
+
+    // Loop songs again
     if (currentSong >= songs.length) {
-      currentSong = 0; // loop songs again
+      currentSong = 0;
     }
+
     playNext();
   };
 }
