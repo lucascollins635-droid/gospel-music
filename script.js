@@ -1,29 +1,77 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  text-align: center;
-  color: white;
-  background: url("https://images.unsplash.com/photo-1507692049790-de58290a4334") no-repeat center center fixed;
-  background-size: cover;
+let songs = [
+  "song1.mp3",
+  "song2.mp3",
+  "song3.mp3",
+  "song4.mp3"
+];
+
+let currentSong = 0;
+let audio = new Audio();
+let startTime;
+let mixDuration = 60 * 60 * 1000; // 1 hour
+let fadeInterval;
+let timerInterval;
+
+function playMusic() {
+  startTime = Date.now();
+  currentSong = 0;
+  playNext();
+  startTimer();
 }
 
-.player {
-  background: rgba(0, 0, 0, 0.7);
-  padding: 40px;
-  margin-top: 100px;
-  border-radius: 15px;
-  display: inline-block;
+function playNext() {
+
+  if (Date.now() - startTime >= mixDuration) {
+    audio.pause();
+    document.getElementById("nowPlaying").innerText = "🔥 Worship Completed!";
+    return;
+  }
+
+  audio.src = songs[currentSong];
+  audio.volume = 0;
+  audio.play();
+
+  document.getElementById("nowPlaying").innerText =
+    "Now Playing: " + songs[currentSong];
+
+  fadeIn();
+
+  audio.onended = function () {
+    currentSong++;
+    if (currentSong >= songs.length) {
+      currentSong = 0;
+    }
+    playNext();
+  };
 }
 
-button {
-  padding: 12px 25px;
-  font-size: 16px;
-  border: none;
-  border-radius: 8px;
-  background-color: gold;
-  cursor: pointer;
+function fadeIn() {
+  let volume = 0;
+  fadeInterval = setInterval(function () {
+    if (volume < 1) {
+      volume += 0.05;
+      audio.volume = volume;
+    } else {
+      clearInterval(fadeInterval);
+    }
+  }, 200);
 }
 
-button:hover {
-  background-color: orange;
+function startTimer() {
+  timerInterval = setInterval(function () {
+    let timeLeft = mixDuration - (Date.now() - startTime);
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      return;
+    }
+
+    let minutes = Math.floor(timeLeft / 60000);
+    let seconds = Math.floor((timeLeft % 60000) / 1000);
+
+    if (seconds < 10) seconds = "0" + seconds;
+
+    document.getElementById("timer").innerText =
+      "Time Left: " + minutes + ":" + seconds;
+  }, 1000);
 }
