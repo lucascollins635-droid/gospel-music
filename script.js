@@ -1,41 +1,29 @@
-let songs = [
-  "song1.mp3",
-  "song2.mp3",
-  "song3.mp3",
-  "song4.mp3"
-];
-
-let currentSong = 0;
-let audio = new Audio();
-let startTime;
-let mixDuration = 60 * 60 * 1000; // 1 hour
-
-function playMusic() {
-  startTime = Date.now();
-  currentSong = 0;
-  playNext();
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  color: white;
+  background: url("https://images.unsplash.com/photo-1507692049790-de58290a4334") no-repeat center center fixed;
+  background-size: cover;
 }
 
-function playNext() {
+.player {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 40px;
+  margin-top: 100px;
+  border-radius: 15px;
+  display: inline-block;
+}
 
-  // If 1 hour reached, stop everything
-  if (Date.now() - startTime >= mixDuration) {
-    audio.pause();
-    alert("🔥 1 Hour Worship Mix Completed!");
-    return;
-  }
+button {
+  padding: 12px 25px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: gold;
+  cursor: pointer;
+}
 
-  audio.src = songs[currentSong];
-  audio.play();
-
-  audio.onended = function () {
-    currentSong++;
-
-    // Loop songs again
-    if (currentSong >= songs.length) {
-      currentSong = 0;
-    }
-
-    playNext();
-  };
+button:hover {
+  background-color: orange;
 }
