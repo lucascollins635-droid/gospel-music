@@ -1,0 +1,29 @@
+name: Create Gospel Video
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        pip install moviepy
+
+    - name: Create Video
+      run: python create_video.py
+
+    - name: Upload Video
+      uses: actions/upload-artifact@v3
+      with:
+        name: gospel-video
+        path: final_video.mp4
